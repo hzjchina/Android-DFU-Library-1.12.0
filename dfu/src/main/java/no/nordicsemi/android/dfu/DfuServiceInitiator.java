@@ -62,7 +62,8 @@ public final class DfuServiceInitiator {
 	private String deviceName;
 
 	private boolean disableNotification = false;
-	private boolean startAsForegroundService = true;
+//	private boolean startAsForegroundService = true;
+	private boolean startAsForegroundService = false;
 
 	private Uri fileUri;
 	private String filePath;
@@ -841,13 +842,14 @@ public final class DfuServiceInitiator {
 		if (buttonlessDfuWithBondSharingUuids != null)
 			intent.putExtra(DfuBaseService.EXTRA_CUSTOM_UUIDS_FOR_BUTTONLESS_DFU_WITH_BOND_SHARING, buttonlessDfuWithBondSharingUuids);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && startAsForegroundService) {
+		/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && startAsForegroundService) {
 			// On Android Oreo and above the service must be started as a foreground service to make it accessible from
 			// a killed application.
 			context.startForegroundService(intent);
 		} else {
 			context.startService(intent);
-		}
+		}*/
+		context.startService(intent);
 		return new DfuServiceController(context);
 	}
 

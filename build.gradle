@@ -3,14 +3,21 @@ buildscript {
     ext.gradle_nexus_publish_plugin = '1.1.0'
 
     repositories {
-        google()
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://maven.aliyun.com/repository/public'}
+        maven { url 'https://maven.aliyun.com/repository/google'}
+//        google()
+//        mavenCentral()
+//        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "io.github.gradle-nexus:publish-plugin:$gradle_nexus_publish_plugin"
     }
+}
+
+ext {
+    buildToolsVersion = '21.1.2'
 }
 
 allprojects {

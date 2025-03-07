@@ -1031,20 +1031,35 @@ public abstract class DfuBaseService extends IntentService implements DfuProgres
 		final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(this);
 		final IntentFilter actionFilter = makeDfuActionIntentFilter();
 		manager.registerReceiver(mDfuActionReceiver, actionFilter);
-		registerReceiver(mDfuActionReceiver, actionFilter); // Additionally we must register this receiver as a non-local to get broadcasts from the notification actions
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			registerReceiver(mDfuActionReceiver, actionFilter,RECEIVER_NOT_EXPORTED);
+		}else {
+			registerReceiver(mDfuActionReceiver, actionFilter); // Additionally we must register this receiver as a non-local to get broadcasts from the notification actions
+		}
 		final IntentFilter filter = new IntentFilter();
 		// As we no longer perform any action based on this broadcast, we may log all ACL events
 		filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
 		filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
 		filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-		registerReceiver(mConnectionStateBroadcastReceiver, filter);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			registerReceiver(mConnectionStateBroadcastReceiver, filter,RECEIVER_NOT_EXPORTED);
+		}else {
+			registerReceiver(mConnectionStateBroadcastReceiver, filter);
+		}
 
 		final IntentFilter bondFilter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-		registerReceiver(mBondStateBroadcastReceiver, bondFilter);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			registerReceiver(mBondStateBroadcastReceiver, bondFilter,RECEIVER_NOT_EXPORTED);
+		}else {
+			registerReceiver(mBondStateBroadcastReceiver, bondFilter);
+		}
 
 		final IntentFilter stateFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-		registerReceiver(mBluetoothStateBroadcastReceiver, stateFilter);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+			registerReceiver(mBluetoothStateBroadcastReceiver, stateFilter,RECEIVER_NOT_EXPORTED);
+		}else {
+			registerReceiver(mBluetoothStateBroadcastReceiver, stateFilter);
+		}
 	}
 
 	@Override
@@ -1096,7 +1111,8 @@ public abstract class DfuBaseService extends IntentService implements DfuProgres
 		final String deviceAddress = intent.getStringExtra(EXTRA_DEVICE_ADDRESS);
 		final String deviceName = intent.getStringExtra(EXTRA_DEVICE_NAME);
 		final boolean disableNotification = intent.getBooleanExtra(EXTRA_DISABLE_NOTIFICATION, false);
-		final boolean foregroundService = intent.getBooleanExtra(EXTRA_FOREGROUND_SERVICE, true);
+//		final boolean foregroundService = intent.getBooleanExtra(EXTRA_FOREGROUND_SERVICE, true);
+		final boolean foregroundService = false;
 		final String filePath = intent.getStringExtra(EXTRA_FILE_PATH);
 		final Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
 		final int fileResId = intent.getIntExtra(EXTRA_FILE_RES_ID, 0);
